@@ -151,3 +151,19 @@ if st.button("건강 상태 분석하기"):
             "※ 스트레칭 시간은 교육용 예시입니다. "
             "통증이나 어지러움이 발생하면 즉시 중단하세요."
         )
+        
+def smartphone_advice(hours, minutes):
+    total_minutes = hours * 60 + minutes
+
+    if total_minutes < 60:
+        advice = "현재 사용 습관을 유지하고 중간중간 휴식하세요."
+    elif total_minutes < 120:
+        advice = "스마트폰을 오래 연속해서 사용하지 않도록 주의하세요."
+    elif total_minutes < 240:
+        advice = "20분마다 먼 곳을 바라보고 자세를 점검하세요."
+    elif total_minutes < 360:
+        advice = "사용 중간에 휴식 시간을 정하고 스트레칭을 해보세요."
+    else:
+        advice = "사용 목적을 점검하고 규칙적인 휴식과 신체활동을 늘려보세요."
+
+    return total_minutes, advice
