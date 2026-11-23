@@ -33,7 +33,7 @@ stretching_data = {
     ]
 }
 
-# 2. 나이에 따른 시간 추천 함수
+# 2. 나이에 따른 안내 함수
 def recommend_time(age):
 
     if age < 20:
@@ -55,17 +55,27 @@ def recommend_time(age):
     return group, stretch_time
 
 
-# 3. 스마트폰 사용 시간 분석 함수
-def check_phone_time(use_time):
+# 3. 스마트폰 사용시간 분석 함수
+def smartphone_advice(hours, minutes):
 
-    if use_time >= 8:
-        return "스마트폰 사용 시간이 긴 편입니다. 중간중간 휴식하세요."
+    total_minutes = hours * 60 + minutes
 
-    elif use_time >= 5:
-        return "스마트폰 사용 시간을 조절하고 규칙적으로 쉬어 주세요."
+    if total_minutes < 60:
+        advice = "현재 사용 습관을 유지하고 중간중간 휴식하세요."
+
+    elif total_minutes < 120:
+        advice = "스마트폰을 오래 연속해서 사용하지 않도록 주의하세요."
+
+    elif total_minutes < 240:
+        advice = "20분마다 먼 곳을 바라보고 자세를 점검하세요."
+
+    elif total_minutes < 360:
+        advice = "사용 중간에 휴식 시간을 정하고 스트레칭을 해보세요."
 
     else:
-        return "바른 자세와 규칙적인 휴식 습관을 유지하세요."
+        advice = "사용 목적을 점검하고 규칙적인 휴식과 신체활동을 늘려보세요."
+
+    return total_minutes, advice
 
 
 # 4. 스트레칭 추천 함수
@@ -95,6 +105,20 @@ age = st.number_input(
     value=17
 )
 
+# 스마트폰 사용시간 입력
+st.subheader("📱 하루 스마트폰 사용시간")
+
+hours = st.number_input(
+    "사용 시간(시간)",
+    min_value=0,
+    max_value=24,
+    value=2
+)
+
+minutes = st.selectbox(
+    "추가 사용 시간(분)",
+    [0, 10, 20, 30, 40, 50]
+)
 
 body_parts = st.multiselect(
     "스트레칭이 필요한 부위를 선택하세요.",
@@ -111,19 +135,24 @@ if st.button("건강 상태 분석하기"):
 
         group, stretch_time = recommend_time(age)
 
+        total, advice = smartphone_advice(hours, minutes)
+
         st.divider()
         st.header("2. 건강 분석 결과")
 
         st.metric("나이", f"{age}세")
         st.success(f"당신은 {group}에 해당합니다.")
 
-        st.write(
-            f"추천 스트레칭 시간: {stretch_time}분"
-        )
+        st.write(f"추천 스트레칭 시간: {stretch_time}분")
 
         st.header("3. 스마트폰 사용 습관 분석")
 
-        st.info(check_phone_time(use_time))
+        st.metric(
+            "하루 스마트폰 사용시간",
+            f"{total // 60}시간 {total % 60}분"
+        )
+
+        st.info(advice)
 
         st.header("4. 맞춤형 스트레칭 안내")
 
@@ -144,39 +173,3 @@ if st.button("건강 상태 분석하기"):
             "※ 스트레칭 시간은 교육용 예시입니다. "
             "통증이나 어지러움이 발생하면 즉시 중단하세요."
         )
-        
-def smartphone_advice(hours, minutes):
-    total_minutes = hours * 60 + minutes
-
-    if total_minutes < 60:
-        advice = "현재 사용 습관을 유지하고 중간중간 휴식하세요."
-    elif total_minutes < 120:
-        advice = "스마트폰을 오래 연속해서 사용하지 않도록 주의하세요."
-    elif total_minutes < 240:
-        advice = "20분마다 먼 곳을 바라보고 자세를 점검하세요."
-    elif total_minutes < 360:
-        advice = "사용 중간에 휴식 시간을 정하고 스트레칭을 해보세요."
-    else:
-        advice = "사용 목적을 점검하고 규칙적인 휴식과 신체활동을 늘려보세요."
-
-    return total_minutes, advice
-
-st.subheader("📱 하루 스마트폰 사용시간")
-
-hours = st.number_input(
-    "사용 시간(시간)",
-    min_value=0,
-    max_value=24,
-    value=2
-)
-
-minutes = st.selectbox(
-    "추가 사용 시간(분)",
-    [0, 10, 20, 30, 40, 50]
-)
-
-if st.button("사용시간 분석하기"):
-    total, advice = smartphone_advice(hours, minutes)
-
-    st.write(f"하루 사용시간: {total // 60}시간 {total % 60}분")
-    st.success(advice)
