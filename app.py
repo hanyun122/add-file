@@ -167,3 +167,23 @@ def smartphone_advice(hours, minutes):
         advice = "사용 목적을 점검하고 규칙적인 휴식과 신체활동을 늘려보세요."
 
     return total_minutes, advice
+
+st.subheader("📱 하루 스마트폰 사용시간")
+
+hours = st.number_input(
+    "사용 시간(시간)",
+    min_value=0,
+    max_value=24,
+    value=2
+)
+
+minutes = st.selectbox(
+    "추가 사용 시간(분)",
+    [0, 10, 20, 30, 40, 50]
+)
+
+if st.button("사용시간 분석하기"):
+    total, advice = smartphone_advice(hours, minutes)
+
+    st.write(f"하루 사용시간: {total // 60}시간 {total % 60}분")
+    st.success(advice)
