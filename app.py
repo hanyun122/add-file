@@ -95,13 +95,6 @@ age = st.number_input(
     value=17
 )
 
-use_time = st.number_input(
-    "하루 스마트폰 사용 시간",
-    min_value=0.0,
-    max_value=24.0,
-    value=5.0,
-    step=0.5
-)
 
 body_parts = st.multiselect(
     "스트레칭이 필요한 부위를 선택하세요.",
